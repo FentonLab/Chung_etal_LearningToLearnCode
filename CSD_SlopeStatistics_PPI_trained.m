@@ -1,0 +1,547 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%CSD_SlopeStatistics.m%%%%%%%%%%%%%%%%%
+%
+% Title : CSD_SlopeStatistics.m
+% Detail : Originated from EEPP_SlopeStatistics.m 
+%
+%           
+%
+%   Author  : Ain Chung
+%   Date    : 04/23/2017
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%CSD_SlopeStatistics.m%%%%%%%%%%%%%%%%%
+
+%% clear and close data
+
+clear all;
+
+%% Load slope and Depth for all animals
+
+Animal_name = {'GadR4','Gad9','Gad10','Gad11','Gad14','Gad24','Gad28'};  %Initial training
+
+Total_num_animal =size(Animal_name,2);
+Total_num_PPI = 2;
+
+%- [0-0] Initialization 13 intensity / 25 step size %%%%%%%%%%%
+
+Effective_intensity_max = 10;
+IntensityStep =10;
+Intensity_list=IntensityStep*(0:Effective_intensity_max-1);
+% Intensity_list_index50=1:2:13; 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%-[0] Load the data
+
+
+raw_slope_GadR4_R1=load('CSDSlope_112118_GadR4_R1.mat'); % 
+raw_slope_GadR4_R2=load('CSDSlope_112118_GadR4_R2.mat'); % 
+raw_slope_GadR9_R1=load('CSDSlope_112118_GadR9_R1.mat'); %  
+raw_slope_GadR9_R2=load('CSDSlope_112118_GadR9_R2.mat'); % 
+raw_slope_GadR10_R1=load('CSDSlope_112118_GadR10_R1.mat'); %  
+raw_slope_GadR10_R2=load('CSDSlope_112118_GadR10_R2.mat'); % 
+raw_slope_GadR11_R1=load('CSDSlope_112118_GadR11_R1.mat'); %  
+raw_slope_GadR11_R2=load('CSDSlope_112118_GadR11_R2.mat'); % 
+raw_slope_GadR14_R1=load('CSDSlope_112118_GadR14_R1.mat'); %  
+raw_slope_GadR14_R2=load('CSDSlope_112118_GadR14_R2.mat'); % 
+raw_slope_GadR24_R1=load('CSDSlope_112118_GadR24_R1.mat'); %  
+raw_slope_GadR24_R2=load('CSDSlope_112118_GadR24_R2.mat'); %
+raw_slope_GadR28_R1=load('CSDSlope_112118_GadR28_R1.mat'); %  
+raw_slope_GadR28_R2=load('CSDSlope_112118_GadR28_R2.mat'); %
+
+
+raw_depth_GadR4_R1=load('CSDDepth_112118_GadR4_R1.mat'); % 
+raw_depth_GadR4_R2=load('CSDDepth_112118_GadR4_R2.mat'); % 
+raw_depth_GadR9_R1=load('CSDDepth_112118_GadR9_R1.mat'); %  
+raw_depth_GadR9_R2=load('CSDDepth_112118_GadR9_R2.mat'); % 
+raw_depth_GadR10_R1=load('CSDDepth_112118_GadR10_R1.mat'); %  
+raw_depth_GadR10_R2=load('CSDDepth_112118_GadR10_R2.mat'); % 
+raw_depth_GadR11_R1=load('CSDDepth_112118_GadR11_R1.mat'); %  
+raw_depth_GadR11_R2=load('CSDDepth_112118_GadR11_R2.mat'); %
+raw_depth_GadR14_R1=load('CSDDepth_112118_GadR14_R1.mat'); %  
+raw_depth_GadR14_R2=load('CSDDepth_112118_GadR14_R2.mat'); % 
+raw_depth_GadR24_R1=load('CSDDepth_112118_GadR24_R1.mat'); %  
+raw_depth_GadR24_R2=load('CSDDepth_112118_GadR24_R2.mat'); % 
+raw_depth_GadR28_R1=load('CSDDepth_112118_GadR28_R1.mat'); %  
+raw_depth_GadR28_R2=load('CSDDepth_112118_GadR28_R2.mat'); % 
+
+
+Total_number_session =1; % Total number to truncate
+
+Num_session_start =1; 
+
+Session_selection = Num_session_start:(Num_session_start+Total_number_session-1);
+
+
+slope_GadR4_R1=raw_slope_GadR4_R1.Slope_data(Session_selection,:,:);
+slope_GadR4_R2=raw_slope_GadR4_R2.Slope_data(Session_selection,:,:);
+slope_GadR9_R1=raw_slope_GadR9_R1.Slope_data(Session_selection,:,:);
+slope_GadR9_R2=raw_slope_GadR9_R2.Slope_data(Session_selection,:,:);
+slope_GadR10_R1=raw_slope_GadR10_R1.Slope_data(Session_selection,:,:);
+slope_GadR10_R2=raw_slope_GadR10_R2.Slope_data(Session_selection,:,:);
+slope_GadR11_R1=raw_slope_GadR11_R1.Slope_data(Session_selection,:,:);
+slope_GadR11_R2=raw_slope_GadR11_R2.Slope_data(Session_selection,:,:);
+slope_GadR14_R1=raw_slope_GadR14_R1.Slope_data(Session_selection,:,:);
+slope_GadR14_R2=raw_slope_GadR14_R2.Slope_data(Session_selection,:,:);
+slope_GadR24_R1=raw_slope_GadR24_R1.Slope_data(Session_selection,:,:);
+slope_GadR24_R2=raw_slope_GadR24_R2.Slope_data(Session_selection,:,:);
+slope_GadR28_R1=raw_slope_GadR28_R1.Slope_data(Session_selection,:,:);
+slope_GadR28_R2=raw_slope_GadR28_R2.Slope_data(Session_selection,:,:);
+
+
+depth_GadR4_R1=raw_depth_GadR4_R1.Depth_data(Session_selection,:,:);
+depth_GadR4_R2=raw_depth_GadR4_R2.Depth_data(Session_selection,:,:);
+depth_GadR9_R1=raw_depth_GadR9_R1.Depth_data(Session_selection,:,:);
+depth_GadR9_R2=raw_depth_GadR9_R2.Depth_data(Session_selection,:,:);
+depth_GadR10_R1=raw_depth_GadR10_R1.Depth_data(Session_selection,:,:);
+depth_GadR10_R2=raw_depth_GadR10_R2.Depth_data(Session_selection,:,:);
+depth_GadR11_R1=raw_depth_GadR11_R1.Depth_data(Session_selection,:,:);
+depth_GadR11_R2=raw_depth_GadR11_R2.Depth_data(Session_selection,:,:);
+depth_GadR14_R1=raw_depth_GadR14_R1.Depth_data(Session_selection,:,:);
+depth_GadR14_R2=raw_depth_GadR14_R2.Depth_data(Session_selection,:,:);
+depth_GadR24_R1=raw_depth_GadR24_R1.Depth_data(Session_selection,:,:);
+depth_GadR24_R2=raw_depth_GadR24_R2.Depth_data(Session_selection,:,:);
+depth_GadR28_R1=raw_depth_GadR28_R1.Depth_data(Session_selection,:,:);
+depth_GadR28_R2=raw_depth_GadR28_R2.Depth_data(Session_selection,:,:);
+
+
+[Total_number_session, num_Stimulus_different, num_channel]=size(slope_GadR4_R1);
+num_Stimulus_different16=size(slope_GadR4_R1,2);   
+
+
+
+%%
+%- Initialization of the data set
+
+
+chid_GadR4 = [4, 9, 10, 11];% 
+chid_GadR9 = [9, 11, 14, 16]; % 
+chid_GadR10 = [6, 8, 12, 14]; % 
+chid_GadR11 = [8, 10, 12, 14]; % 
+chid_GadR14 = [6, 9, 13, 15]; % 
+chid_GadR24 = [7, 9, 12, 14]; %
+chid_GadR28 = [6, 8, 12, 14]; %
+
+
+raw_chid=[chid_GadR4; chid_GadR9; chid_GadR10; chid_GadR11; chid_GadR14;chid_GadR24;chid_GadR28];
+Total_num_channel_analysis = size(raw_chid,2);
+
+Slope_data = zeros(Total_number_session,num_Stimulus_different,num_channel,Total_num_animal,Total_num_PPI);
+
+
+%%
+Slope_data(:,:,:,1,1)=slope_GadR4_R1(:,:,:);
+Slope_data(:,:,:,1,2)=slope_GadR4_R2(:,:,:);
+Slope_data(:,:,:,2,1)=slope_GadR9_R1(:,:,:);
+Slope_data(:,:,:,2,2)=slope_GadR9_R2(:,:,:);
+Slope_data(:,:,:,3,1)=slope_GadR10_R1(:,:,:);
+Slope_data(:,:,:,3,2)=slope_GadR10_R2(:,:,:);
+Slope_data(:,:,:,4,1)=slope_GadR11_R1(:,:,:);
+Slope_data(:,:,:,4,2)=slope_GadR11_R2(:,:,:);
+Slope_data(:,:,:,5,1)=slope_GadR14_R1(:,:,:);
+Slope_data(:,:,:,5,2)=slope_GadR14_R2(:,:,:);
+Slope_data(:,:,:,6,1)=slope_GadR24_R1(:,:,:);
+Slope_data(:,:,:,6,2)=slope_GadR24_R2(:,:,:);
+Slope_data(:,:,:,7,1)=slope_GadR28_R1(:,:,:);
+Slope_data(:,:,:,7,2)=slope_GadR28_R2(:,:,:);
+
+Depth_data(:,:,:,1,1)=depth_GadR4_R1(:,:,:);
+Depth_data(:,:,:,1,2)=depth_GadR4_R2(:,:,:);
+Depth_data(:,:,:,2,1)=depth_GadR9_R1(:,:,:);
+Depth_data(:,:,:,2,2)=depth_GadR9_R2(:,:,:);
+Depth_data(:,:,:,3,1)=depth_GadR10_R1(:,:,:);
+Depth_data(:,:,:,3,2)=depth_GadR10_R2(:,:,:);
+Depth_data(:,:,:,4,1)=depth_GadR11_R1(:,:,:);
+Depth_data(:,:,:,4,2)=depth_GadR11_R2(:,:,:);
+Depth_data(:,:,:,5,1)=depth_GadR14_R1(:,:,:);
+Depth_data(:,:,:,5,2)=depth_GadR14_R2(:,:,:);
+Depth_data(:,:,:,6,1)=depth_GadR24_R1(:,:,:);
+Depth_data(:,:,:,6,2)=depth_GadR24_R2(:,:,:);
+Depth_data(:,:,:,7,1)=depth_GadR28_R1(:,:,:);
+Depth_data(:,:,:,7,2)=depth_GadR28_R2(:,:,:);
+
+% Initalization
+chid=zeros(Total_num_animal,Total_num_channel_analysis,Total_number_session);
+
+%% Chid size : (Total_num_animal,Effective_stimulus_experiment_number,Total_number_session)
+for k=1:Total_number_session
+
+    chid(:,:,k)=raw_chid;  
+end
+
+
+
+
+
+%% [3] Inter-animal Statistics
+slope_ratio_animal= zeros(Total_number_session,Effective_intensity_max,Total_num_channel_analysis,Total_num_animal);
+depth_ratio_animal= zeros(Total_number_session,Effective_intensity_max,Total_num_channel_analysis,Total_num_animal);
+avg_slope_ratio_animal = zeros(Total_number_session,Effective_intensity_max,Total_num_channel_analysis);
+std_slope_ratio_animal = zeros(Total_number_session,Effective_intensity_max,Total_num_channel_analysis);
+avg_depth_ratio_animal = zeros(Total_number_session,Effective_intensity_max,Total_num_channel_analysis);
+std_depth_ratio_animal = zeros(Total_number_session,Effective_intensity_max,Total_num_channel_analysis);
+
+
+
+
+
+
+for i=1:Total_number_session
+    for j=1:Total_num_channel_analysis
+        
+        for l=1:num_Stimulus_different16 %% for correcting normalization errors
+            for k=1:Total_num_animal    
+                
+                slope_ratio_animal(i,l,j,k)=Slope_data(i,l,chid(k,j),k,2)/Slope_data(i,l,chid(k,j),k,1);
+                depth_ratio_animal(i,l,j,k)=Depth_data(i,l,chid(k,j),k,2)/Depth_data(i,l,chid(k,j),k,1);
+                
+                if isnan(slope_ratio_animal(i,l,j,k))
+                   slope_ratio_animal(i,l,j,k) = 0;
+                elseif isnan(depth_ratio_animal(i,l,j,k))
+                    
+                end
+            end
+            
+                avg_slope_ratio_animal(i,l,j)=mean(slope_ratio_animal(i,l,j,:));
+                std_slope_ratio_animal(i,l,j)=std(slope_ratio_animal(i,l,j,:))/sqrt(Total_num_animal);
+                avg_depth_ratio_animal(i,l,j)=mean(depth_ratio_animal(i,l,j,:));
+                std_depth_ratio_animal(i,l,j)=std(depth_ratio_animal(i,l,j,:))/sqrt(Total_num_animal);
+                
+        end
+
+    end
+end
+
+
+%% [3-1] PPI timing index
+slope_ratio_animal_switch_time= zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);
+depth_ratio_animal_switch_time= zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);
+auc_slope_switch_before= zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);
+auc_slope_switch_after= zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);
+auc_depth_switch_before= zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);
+auc_depth_switch_after= zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);
+
+Effective_time_test=Intensity_list(2:end);
+T_sample = 0.01;
+
+Effective_time = min(Effective_time_test):T_sample:max(Effective_time_test);
+
+fil_a = 1;
+fil_b = [1,-1];
+for i=1:Total_number_session
+    for j=1:Total_num_channel_analysis
+        for k=1:Total_num_animal
+            
+            % slope_ratio_animal_switch_time measurement
+            Effective_temp_data = squeeze(slope_ratio_animal(i,2:end,j,k));
+            slope_ratio_integral=@(t) interp1(Effective_time_test,Effective_temp_data,t,'pchip');
+            Effective_data = slope_ratio_integral(Effective_time)>=1;
+            fil_a = 1;
+            fil_b = [1,-1];
+            Effective_data_filtered=filter(fil_b,fil_a,Effective_data);
+            I=find(Effective_data_filtered==1);
+            if ~isempty(I)
+                if length(I)>1
+                   slope_ratio_animal_switch_time(i,j,k) = Effective_time(I(2));
+                else
+                   slope_ratio_animal_switch_time(i,j,k) = Effective_time(I(1)); 
+                end
+            else
+               slope_ratio_animal_switch_time(i,j,k) = Effective_time(1) ;
+            end
+            
+            % slope_ratio_animal_switch_time measurement
+            if j>1 && j<4
+                Effective_temp_data = squeeze(depth_ratio_animal(i,2:end,j,k));
+                depth_ratio_integral=@(t) interp1(Effective_time_test,Effective_temp_data,t,'pchip');
+                Effective_data = depth_ratio_integral(Effective_time)>=1;
+                fil_a = 1;
+                fil_b = [1,-1];
+                Effective_data_filtered=filter(fil_b,fil_a,Effective_data);
+                I=find(Effective_data_filtered==1);
+                if ~isempty(I)
+                    if length(I)>1
+                       depth_ratio_animal_switch_time(i,j,k) = Effective_time(I(2));
+                    else
+                       depth_ratio_animal_switch_time(i,j,k) = Effective_time(I(1)); 
+                    end
+                else
+                   depth_ratio_animal_switch_time(i,j,k) = Effective_time(1) ;
+                end
+            end
+             
+        end
+
+    end
+end
+
+% Area before the switch and after the switch
+for i=1:Total_number_session
+    for j=1:Total_num_channel_analysis
+        for k=1:Total_num_animal
+            
+            % slope_ratio_animal_switch_time measurement
+            Effective_temp_data = squeeze(slope_ratio_animal(i,2:end,j,k));
+            slope_ratio_integral=@(t) interp1(Effective_time_test,Effective_temp_data,t,'pchip');
+            Effective_data = slope_ratio_integral(Effective_time)>=1;
+            
+            auc_slope_switch_before(i,j,k)=integral(slope_ratio_integral,Effective_time_test(1),slope_ratio_animal_switch_time(i,j,k));
+            auc_slope_switch_after(i,j,k)=integral(slope_ratio_integral,slope_ratio_animal_switch_time(i,j,k),Effective_time_test(end));
+
+            % slope_ratio_animal_switch_time measurement
+            if j>1 && j<4
+                Effective_temp_data = squeeze(depth_ratio_animal(i,2:end,j,k));
+                depth_ratio_integral=@(t) interp1(Effective_time_test,Effective_temp_data,t,'pchip');
+                Effective_data = depth_ratio_integral(Effective_time)>=1;
+                
+                auc_depth_switch_before(i,j,k)=integral(depth_ratio_integral,Effective_time_test(1),slope_ratio_animal_switch_time(i,j,k));
+                auc_depth_switch_after(i,j,k)=integral(depth_ratio_integral,slope_ratio_animal_switch_time(i,j,k),Effective_time_test(end));
+
+            end
+             
+        end
+
+    end
+end
+% STEP 1 Plot
+
+
+
+
+%% [3-1] Plot the inter-animal statistics
+
+figure;
+    for j=1:Total_num_channel_analysis
+        
+        for i=1:1:Total_number_session
+
+        subplot(1,Total_num_channel_analysis,j)
+
+        hold on
+        test_error=errorbar(Intensity_list,avg_slope_ratio_animal(i,:,j),std_slope_ratio_animal(i,:,j));
+
+        
+        xlim([0, (Effective_intensity_max-1)*IntensityStep]);
+        %ylim([-5 5]);
+        axis square;
+        hold off;    
+        end
+    end
+    name_t='Sum/ w/o normalization';
+    text(15,22,name_t);
+
+figure;
+    for j=1:Total_num_channel_analysis
+        
+        for i=1:1:Total_number_session
+
+        subplot(1,Total_num_channel_analysis,j)
+
+        hold on
+        test_error=errorbar(Intensity_list,avg_depth_ratio_animal(i,:,j),std_depth_ratio_animal(i,:,j));
+
+        
+        xlim([0, (Effective_intensity_max-1)*IntensityStep]);
+        %ylim([-5 5]);
+        axis square;
+        hold off;    
+        end
+    end
+    name_t='Sum/ w/o normalization';
+    text(15,22,name_t);
+
+
+
+
+%% [4] 1. Maximum slope 2. 50% of the maximum 3. Maximum slope variation.
+
+
+max_slope           = zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal); % 1 case
+max_slope_avg       = zeros(Total_number_session,Total_num_channel_analysis); % 1 case avg
+max_slope_std       = zeros(Total_number_session,Total_num_channel_analysis); % 1 case std
+
+max_slope_half      = zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal); % 2 case
+max_slope_half_avg       = zeros(Total_number_session,Total_num_channel_analysis); % 2 case avg
+max_slope_half_std       = zeros(Total_number_session,Total_num_channel_analysis); % 2 case std
+
+max_slope_variation = zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal);  % 3 case : SAVE Maximum and its intensity index V(I+1)-V(I)
+max_slope_variation_avg       = zeros(Total_number_session,Total_num_channel_analysis); % 3 case avg
+max_slope_variation_std       = zeros(Total_number_session,Total_num_channel_analysis); % 3 case std
+
+max_slope_variation30 = zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal,2);  % 3 case : SAVE Maximum and its intensity index V(I+1)-V(I)
+max_slope_variation30_avg       = zeros(Total_number_session,Total_num_channel_analysis); % 3 case avg
+max_slope_variation30_std       = zeros(Total_number_session,Total_num_channel_analysis); % 3 case std
+
+max_slope_auc           = zeros(Total_number_session,Total_num_channel_analysis,Total_num_animal); % 1 case
+max_slope_auc_avg       = zeros(Total_number_session,Total_num_channel_analysis); % 1 case avg
+max_slope_auc_std       = zeros(Total_number_session,Total_num_channel_analysis); % 1 case std
+
+
+for i=1:Total_number_session
+    for j=1:Total_num_channel_analysis
+        
+        animal_index=[];
+        for k=1:Total_num_animal %%%%%%%%%%%%%-WARNING----Total_num_animal16 was chosen JUST TO SEE THE CONTEXT B CASE 11/09/2016 
+            %%%%--Should be always Total_num_animal
+            
+%             %%%%%%%%%%%%%%%%%%%%%%%%%% Context C PP2 non-data removal%%%%%%%%%%%%%%%%
+%             if (k==2)&&context_index(i)==3  % If PP2 and Context C(Conflict is selected)
+% 
+%             else
+%             %%%%%%%%%%%%%%%%%%%%%%%%%% Context C PP2 non-data
+%             %%%%%%%%%%%%%%%%%%%%%%%%%% removal%%%%%%%%%%%%%%%%
+            
+            animal_index=[animal_index,k]; % Exclude PP2 with Context C : usually 5 or 4 in this case. 
+            
+            
+            max_slope(i,j,k)=slope_ratio_animal(i,Effective_intensity_max,j,k); % maximum slope
+            slope_variation = slope_ratio_animal(i,2:Effective_intensity_max,j,k)...
+                               -slope_ratio_animal(i,1:Effective_intensity_max-1,j,k);
+            [~, I_max]=max(abs(slope_variation));
+            max_slope_variation30(i,j,k,:)=[slope_variation(I_max); I_max];
+            
+            avg_func =@(x) 1*(interp1(Intensity_list,slope_ratio_animal(i,:,j,k),x,'linear')-max_slope(i,j,k)/2)^2;
+            slope_50_init=Intensity_list(floor(Effective_intensity_max/2));
+            slope_50=lsqnonlin(avg_func,slope_50_init,Intensity_list(1),Intensity_list(end));
+            cnt=0;
+            while avg_func(slope_50)>0.01&& slope_50_init<Intensity_list(Effective_intensity_max)
+                cnt=cnt+1;
+            slope_50_init=Intensity_list(floor(Effective_intensity_max/2)+cnt);    
+                slope_50=lsqnonlin(avg_func,slope_50_init,Intensity_list(1),Intensity_list(end));
+                
+            end
+            cnt=0;
+            while avg_func(slope_50)>0.01&& slope_50_init>Intensity_list(1)
+                cnt=cnt-1;
+            slope_50_init=Intensity_list(floor(Effective_intensity_max/2)+cnt);    
+                slope_50=lsqnonlin(avg_func,slope_50_init,Intensity_list(1),Intensity_list(end));
+                
+            end
+            if avg_func(slope_50)>0.01
+                error('Exact 50% cannot be found');
+               
+            end
+            slope_50_int=(slope_50-mod(slope_50,IntensityStep))/IntensityStep+1;
+            max_slope_half(i,j,k)=slope_50;
+            max_slope_variation(i,j,k)=slope_ratio_animal(i,slope_50_int+1,j,k)-slope_ratio_animal(i,slope_50_int,j,k);
+            
+            avg_func_auc =@(x) interp1(Intensity_list,slope_ratio_animal(i,:,j,k),x,'linear');
+            max_slope_auc(i,j,k)=integral(avg_func_auc,Intensity_list(1),Intensity_list(end));
+%             %%%%%%%%%%%%%%%%%%%%%%%%%% Context C PP2 non-data removal%%%%%%%%%%%%%%%%
+%             end
+%             %%%%%%%%%%%%%%%%%%%%%%%%%% Context C PP2 non-data removal%%%%%%%%%%%%%%%%
+        end
+        
+            num_animal_index=length(animal_index);
+            max_slope_avg(i,j)=mean(max_slope(i,j,animal_index));
+            max_slope_std(i,j)=std(max_slope(i,j,animal_index))/sqrt(num_animal_index);
+
+            max_slope_half_avg(i,j)=mean(max_slope_half(i,j,animal_index));
+            max_slope_half_std(i,j)=std(max_slope_half(i,j,animal_index))/sqrt(num_animal_index);
+
+            max_slope_variation_avg(i,j)=mean(max_slope_variation(i,j,animal_index,1));
+            max_slope_variation_std(i,j)=std(max_slope_variation(i,j,animal_index,1))/sqrt(num_animal_index);
+            
+            max_slope_variation30_avg(i,j)=mean(max_slope_variation30(i,j,animal_index,1));
+            max_slope_variation30_std(i,j)=std(max_slope_variation30(i,j,animal_index,1))/sqrt(num_animal_index);
+        
+            max_slope_auc_avg(i,j)=mean(max_slope_auc(i,j,animal_index));
+            max_slope_auc_std(i,j)=std(max_slope_auc(i,j,animal_index))/sqrt(num_animal_index);
+
+            
+        
+    end
+end
+
+
+%% [4-1] Plot 1. Max 2. Max 50%(X) 3. Max 50%(Y)
+figure;
+Total_num_max_analysis=5; % case 1 2 3
+Session_list= 1:2:10;
+show_session_list = 1:length(Session_list);
+for i=1:Total_num_max_analysis
+    for j=1:Total_num_channel_analysis
+
+        subplot(Total_num_channel_analysis,Total_num_max_analysis,Total_num_max_analysis*(j-1)+i)
+
+        hold on;
+        
+        cnt=1;
+        for k=Session_list
+            switch i 
+            case 1
+                bar(cnt,max_slope_avg(k,j));
+            case 2
+                bar(cnt,max_slope_half_avg(k,j));
+            case 3
+                bar(cnt,max_slope_variation_avg(k,j));
+            case 4
+                bar(cnt,max_slope_variation30_avg(k,j));
+            case 5
+                bar(cnt,max_slope_auc_avg(k,j));
+            end 
+            cnt=cnt+1;
+        end
+        
+        
+        colr='ro';
+        switch i 
+        case 1
+           % bar(Session_list,max_slope_avg(Session_list,j));
+            test_error=errorbar(show_session_list,max_slope_avg(Session_list,j),max_slope_std(Session_list,j),colr);
+        case 2
+           % bar(Session_list,max_slope_half_avg(Session_list,j));
+            test_error=errorbar(show_session_list,max_slope_half_avg(Session_list,j),max_slope_half_std(Session_list,j),colr);
+        case 3
+           % bar(Session_list,max_slope_variation_avg(Session_list,j));
+            test_error=errorbar(show_session_list,max_slope_variation_avg(Session_list,j),max_slope_variation_std(Session_list,j),colr);
+        case 4
+           % bar(Session_list,max_slope_variation_avg(Session_list,j));
+            test_error=errorbar(show_session_list,max_slope_variation30_avg(Session_list,j),max_slope_variation30_std(Session_list,j),colr);
+        case 5
+           % bar(Session_list,max_slope_variation_avg(Session_list,j));
+            test_error=errorbar(show_session_list,max_slope_auc_avg(Session_list,j),max_slope_auc_std(Session_list,j),colr);
+        
+        end
+        
+        
+        hold off;
+        
+    end
+end
+
+
+%%
+upper_max_slope_variation30=reshape(max_slope_variation30(:,4,:,1),Total_number_session,Total_num_animal);
+lower_max_slope_variation30=reshape(max_slope_variation30(:,5,:,1),Total_number_session,Total_num_animal);
+upper_max_slope=reshape(max_slope(:,4,:),Total_number_session,Total_num_animal);
+lower_max_slope=reshape(max_slope(:,5,:),Total_number_session,Total_num_animal);
+upper_max_slope_half=reshape(max_slope_half(:,4,:),Total_number_session,Total_num_animal);
+lower_max_slope_half=reshape(max_slope_half(:,5,:),Total_number_session,Total_num_animal);
+upper_max_slope_variation=reshape(max_slope_variation(:,4,:,1),Total_number_session,Total_num_animal);
+lower_max_slope_variation=reshape(max_slope_variation(:,5,:,1),Total_number_session,Total_num_animal);
+upper_max_slope_auc=reshape(max_slope_auc(:,4,:),Total_number_session,Total_num_animal);
+lower_max_slope_auc=reshape(max_slope_auc(:,5,:),Total_number_session,Total_num_animal);
+
+% 
+% sheet='SlopeAll_CH_' ;
+% for j=1:Total_num_channel_analysis16
+%     for i=1:Num_session_16
+%         A(:,:)=reshape(Slope_data_normalize(i,1:Effective_intensity_max,j,:),Effective_intensity_max,size(Total_Slope_normalize,4));
+%         sheettemp=strcat(sheet,num2str(j));
+%         sheetname=strcat(sheettemp,'_Session_',num2str(i),'xls');
+%         xlswrite(sheetname,A')
+%     end
+% end
+% 
+% clear A;
+% sheet='DepthNormAll_CH_' ;
+% for j=1:Total_num_channel_analysis
+%     for i=1:Total_number_session
+%         A(:,:)=reshape(Depth_data_normalize(i,1:Effective_intensity_max,j,:),Effective_intensity_max,size(Total_Depth_normalize,4));
+%         sheettemp=strcat(sheet,num2str(j));
+%         sheetname=strcat(sheettemp,'_Session_',num2str(i),'xls');
+%         xlswrite(sheetname,A')
+%     end
+% end
